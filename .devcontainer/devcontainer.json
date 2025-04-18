@@ -1,0 +1,40 @@
+{
+	"name": "Branas.io",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/kreemer/features/stow:1": { "version": "latest" }
+	},
+	"forwardPorts": [3000, 4000, 5432, 5433, 5434, 5173, 5672, 15672],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"eamodio.gitlens",
+				"catppuccin.catppuccin-vsc",
+				"pkief.material-icon-theme",
+				"biomejs.biome",
+				"Vue.volar",
+				"oven.bun-vscode"
+			],
+			"settings": {
+				"editor.tabSize": 2,
+				"editor.fontLigatures": true,
+				"editor.defaultFormatter": "biomejs.biome",
+				"editor.formatOnSave": true,
+				"editor.cursorStyle": "block",
+				"editor.codeActionsOnSave": {
+					"quickfix.biome": "explicit",
+					"git.enableCommitSigning": "explicit"
+				},
+				"workbench.iconTheme": "material-icon-theme",
+				"workbench.colorTheme": "Catppuccin Mocha",
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"terminal.integrated.cursorBlinking": true,
+				"terminal.integrated.fontFamily": "JetBrainsMono Nerd Font"
+			}
+		}
+	},
+	"remoteUser": "root",
+	"runArgs": ["--name", "branas_io"],
+	"onCreateCommand": "npm install -g bun"
+}
