@@ -1,13 +1,18 @@
 import { inject } from "../common/Registry";
 import type { UseCase } from "../common/UseCase";
 import { Account } from "../domain/entities/Account";
+import { transactional } from "../infra/database/transactional";
 import { ApplicationError } from "./ApplicationError";
-import { ACCOUNT_REPOSITORY, type AccountRepository } from "./repositories/AccountRepository.interface";
+import {
+	ACCOUNT_REPOSITORY,
+	type AccountRepository,
+} from "./repositories/AccountRepository.interface";
 
 export class Signup implements UseCase<Input, Output> {
 	@inject(ACCOUNT_REPOSITORY)
 	private readonly accountRepository!: AccountRepository;
 
+	@transactional
 	async execute(data: Input): Promise<{ accountId: string }> {
 		try {
 			const account = Account.create({
@@ -50,4 +55,4 @@ export type Input = {
 	password: string;
 };
 
-export type Output = { accountId: string }
+export type Output = { accountId: string };
