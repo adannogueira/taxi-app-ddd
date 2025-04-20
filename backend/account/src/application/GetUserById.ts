@@ -1,7 +1,10 @@
 import { inject } from "../common/Registry";
 import type { UseCase } from "../common/UseCase";
 import { ApplicationError } from "./ApplicationError";
-import { ACCOUNT_REPOSITORY, type AccountRepository } from "./repositories/AccountRepository.interface";
+import {
+	ACCOUNT_REPOSITORY,
+	type AccountRepository,
+} from "./repositories/AccountRepository.interface";
 
 export class GetUserById implements UseCase<string, Output> {
 	@inject(ACCOUNT_REPOSITORY)
