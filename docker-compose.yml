@@ -8,4 +8,12 @@ services:
       - "5432:5432"
     volumes:
       - ./create.sql:/docker-entrypoint-initdb.d/init.sql
-  
+  postgres_ride:
+    image: postgres:14.3
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: local
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/init.sql
