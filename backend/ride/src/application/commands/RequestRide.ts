@@ -1,6 +1,7 @@
 import { inject } from "../../common/Registry";
 import type { UseCase } from "../../common/UseCase";
 import { Ride } from "../../domain/entities/Ride";
+import { transactional } from "../../infra/database/transactional";
 import {
 	ACCOUNT_GATEWAY,
 	type AccountGateway,
@@ -17,6 +18,7 @@ export class RequestRide implements UseCase<Input, Output> {
 	@inject(RIDE_REPOSITORY)
 	private readonly rideRepository!: RideRepository;
 
+	@transactional
 	async execute(data: Input) {
 		const user = await this.accountGateway.findById(data.passengerId);
 		if (!user) throw new ApplicationError(Messages.USER_NOT_FOUND, 404);

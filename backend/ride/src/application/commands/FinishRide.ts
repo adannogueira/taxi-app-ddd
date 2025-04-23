@@ -1,5 +1,6 @@
 import { inject } from "../../common/Registry";
 import type { UseCase } from "../../common/UseCase";
+import { transactional } from "../../infra/database/transactional";
 import { ApplicationError } from "../errors/ApplicationError";
 import {
 	POSITION_REPOSITORY,
@@ -16,6 +17,7 @@ export class FinishRide implements UseCase<string, void> {
 	@inject(POSITION_REPOSITORY)
 	private readonly positionRepository!: PositionRepository;
 
+	@transactional
 	async execute(rideId: string) {
 		const ride = await this.rideRepository.findById(rideId);
 		if (!ride) throw new ApplicationError(Messages.NOT_FOUND, 404);

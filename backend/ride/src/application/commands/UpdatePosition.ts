@@ -1,6 +1,7 @@
 import { inject } from "../../common/Registry";
 import type { UseCase } from "../../common/UseCase";
 import { Position } from "../../domain/entities/Position";
+import { transactional } from "../../infra/database/transactional";
 import { ApplicationError } from "../errors/ApplicationError";
 import {
 	POSITION_REPOSITORY,
@@ -17,6 +18,7 @@ export class UpdatePosition implements UseCase<Input, void> {
 	@inject(RIDE_REPOSITORY)
 	private readonly rideRepository!: RideRepository;
 
+	@transactional
 	async execute(data: Input) {
 		const ride = await this.rideRepository.findById(data.rideId);
 		if (!ride?.isInProgress())
