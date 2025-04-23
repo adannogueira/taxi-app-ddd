@@ -27,3 +27,34 @@ export type AccountDto = {
 	isDriver: boolean;
 	password: string;
 };
+
+export class AccountGatewayHttp implements AccountGateway {
+	@inject(HTTP_CLIENT)
+	private readonly httpClient!: HttpClient;
+
+	async signup(data: SignupInput): Promise<{ accountId: string } | null> {
+		const output = await this.httpClient.post<{ accountId: string }>(
+			"http://localhost:3000/signup",
+			data,
+		);
+		if (!output) return null;
+		return { accountId: output.accountId };
+	}
+
+	async findById(accountId: string): Promise<AccountDto | null> {
+		const output = await this.httpClient.get<AccountDto>(
+			`http://localhost:3000/users/${accountId}`,
+		);
+		if (!output) return null;
+		return {
+			accountId: output.accountId,
+			carPlate: output.carPlate,
+			cpf: output.cpf,
+			email: output.email,
+			isDriver: output.isDriver,
+			isPassenger: output.isPassenger,
+			name: output.name,
+			password: output.password,
+		};
+	}
+}
