@@ -34,3 +34,14 @@ create table ccca.position (
   long numeric,
   date timestamp
 );
+
+create table ccca.ride_projection (
+	ride_id uuid,
+	passenger_name text,
+	driver_name text,
+	fare numeric,
+	distance numeric,
+	status text,
+	payment_id uuid,
+	payment_status text
+);

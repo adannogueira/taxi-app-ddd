@@ -3,6 +3,7 @@ import type {
 	AcceptRide,
 } from "../../application/commands/AcceptRide";
 import type { FinishRide } from "../../application/commands/FinishRide";
+import type { GetRideById } from "../../application/queries/GetRideById";
 import type {
 	Input as RequestRideInput,
 	RequestRide,
@@ -20,6 +21,7 @@ export class RideController {
 		readonly httpServer: HttpServer,
 		readonly connection: Database,
 		readonly requestRide: RequestRide,
+		readonly getride: GetRideById,
 		readonly acceptRide: AcceptRide,
 		readonly startRide: StartRide,
 		readonly finishRide: FinishRide,
@@ -30,6 +32,15 @@ export class RideController {
 			"/request-ride",
 			async (data: RequestRideInput) => {
 				const output = await requestRide.execute(data);
+				return output;
+			},
+		);
+
+		httpServer.register(
+			"get",
+			"/rides/:rideId",
+			async ({ rideId }: { rideId: string }) => {
+				const output = await getride.execute(rideId);
 				return output;
 			},
 		);
