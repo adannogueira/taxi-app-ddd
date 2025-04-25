@@ -1,0 +1,126 @@
+{
+	"exchanges": [
+		{
+			"name": "RideRequested",
+			"vhost": "/",
+			"type": "direct",
+			"durable": true,
+			"auto_delete": false,
+			"internal": false,
+			"arguments": {}
+		},
+		{
+			"name": "RideAccepted",
+			"vhost": "/",
+			"type": "direct",
+			"durable": true,
+			"auto_delete": false,
+			"internal": false,
+			"arguments": {}
+		},
+		{
+			"name": "RideFinished",
+			"vhost": "/",
+			"type": "direct",
+			"durable": true,
+			"auto_delete": false,
+			"internal": false,
+			"arguments": {}
+		}
+	],
+	"queues": [
+		{
+			"name": "RideRequested.updateProjection",
+			"vhost": "/",
+			"durable": true,
+			"auto_delete": false,
+			"arguments": {
+				"x-queue-type": "classic"
+			}
+		},
+		{
+			"name": "RideAccepted.updateProjection",
+			"vhost": "/",
+			"durable": true,
+			"auto_delete": false,
+			"arguments": {
+				"x-queue-type": "classic"
+			}
+		},
+		{
+			"name": "RideFinished.updateProjection",
+			"vhost": "/",
+			"durable": true,
+			"auto_delete": false,
+			"arguments": {
+				"x-queue-type": "classic"
+			}
+		},
+		{
+			"name": "RideFinished.processPayment",
+			"vhost": "/",
+			"durable": true,
+			"auto_delete": false,
+			"arguments": {
+				"x-queue-type": "classic"
+			}
+		}
+	],
+	"bindings": [
+		{
+			"source": "RideRequested",
+			"vhost": "/",
+			"destination": "RideRequested.updateProjection",
+			"destination_type": "queue",
+			"routing_key": "",
+			"arguments": {}
+		},
+		{
+			"source": "RideAccepted",
+			"vhost": "/",
+			"destination": "RideAccepted.updateProjection",
+			"destination_type": "queue",
+			"routing_key": "",
+			"arguments": {}
+		},
+		{
+			"source": "RideFinished",
+			"vhost": "/",
+			"destination": "RideFinished.updateProjection",
+			"destination_type": "queue",
+			"routing_key": "",
+			"arguments": {}
+		},
+		{
+			"source": "RideFinished",
+			"vhost": "/",
+			"destination": "RideFinished.processPayment",
+			"destination_type": "queue",
+			"routing_key": "",
+			"arguments": {}
+		}
+	],
+	"users": [
+		{
+			"name": "guest",
+			"password_hash": "BMfxN8drrYcIqXZMr+pWTpDT0nMcOagMduLX0bjr4jwud/pN",
+			"hashing_algorithm": "rabbit_password_hashing_sha256",
+			"tags": ["administrator"],
+			"limits": {}
+		}
+	],
+	"vhosts": [
+		{
+			"name": "/"
+		}
+	],
+	"permissions": [
+		{
+			"user": "guest",
+			"vhost": "/",
+			"configure": ".*",
+			"write": ".*",
+			"read": ".*"
+		}
+	]
+}
