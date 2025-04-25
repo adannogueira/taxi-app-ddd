@@ -45,3 +45,12 @@ create table ccca.ride_projection (
 	payment_id uuid,
 	payment_status text
 );
+
+create table ccca.events (
+	event_id uuid primary key,
+	name text,
+	message text,
+	date timestamp,
+	published boolean,
+	published_at timestamp
+)

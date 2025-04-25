@@ -17,6 +17,16 @@ services:
       - "5433:5432"
     volumes:
       - ./create.sql:/docker-entrypoint-initdb.d/init.sql
+  postgres_reader:
+    image: postgres:14.3
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: local
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/init.sql
+
   rabbitmq:
     image: rabbitmq:3-management
     volumes:
