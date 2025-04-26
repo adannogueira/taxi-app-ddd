@@ -6,10 +6,10 @@ Ator: Passageiro, Motorista
 Input: name, email, cpf, carPlate, password, isPassenger, isDriver
 Output: account_id
 
--[ ] deve verificar se o email já existe e lançar um erro caso já exista
--[ ] deve gerar o account_id (uuid)
--[ ] deve validar o nome, email e cpf
--[ ] deve apenas salvar a senha, por enquanto em claro
+-[x] deve verificar se o email já existe e lançar um erro caso já exista
+-[x] deve gerar o account_id (uuid)
+-[x] deve validar o nome, email e cpf
+-[x] deve apenas salvar a senha, por enquanto em claro
 
 ## UC2 - GetAccount
 Input: account_id
@@ -25,11 +25,11 @@ Ator: Passageiro
 Input: passenger_id (account_id), from (lat, long), to (lat, long)
 Output: ride_id
 
--[ ] deve verificar se o account_id tem is_passenger true
--[ ] deve verificar se já não existe uma corrida do passageiro em status diferente de "completed", se existir lançar um erro
--[ ] deve gerar o ride_id (uuid)
--[ ] deve definir o status como "requested"
--[ ] deve definir date com a data atual
+-[x] deve verificar se o account_id tem is_passenger true
+-[x] deve verificar se já não existe uma corrida do passageiro em status diferente de "completed", se existir lançar um erro
+-[x] deve gerar o ride_id (uuid)
+-[x] deve definir o status como "requested"
+-[x] deve definir date com a data atual
 
 ## UC4 - GetRide
 Input: ride_id
@@ -55,28 +55,28 @@ Ator: Motorista
 Input: ride_id, driver_id (account_id)
 Output: void
 
--[ ] deve verificar se o account_id tem is_driver true
--[ ] deve verificar se o status da corrida é "requested", se não for, lançar um erro
--[ ] deve verificar se o motorista já tem outra corrida com status "accepted" ou "in_progress", se tiver lançar um erro
--[ ] deve associar o driver_id na corrida
--[ ] deve mudar o status para "accepted"
+-[x] deve verificar se o account_id tem is_driver true
+-[x] deve verificar se o status da corrida é "requested", se não for, lançar um erro
+-[x] deve verificar se o motorista já tem outra corrida com status "accepted" ou "in_progress", se tiver lançar um erro
+-[x] deve associar o driver_id na corrida
+-[x] deve mudar o status para "accepted"
 
 ## UC6 - StartRide
 Ator: Motorista
 Input: ride_id
 Output: void
 
--[ ] Deve verificar se a corrida está em status "accepted", se não estiver lançar um erro
--[ ] Deve modificar o status da corrida para "in_progress"
+-[x] Deve verificar se a corrida está em status "accepted", se não estiver lançar um erro
+-[x] Deve modificar o status da corrida para "in_progress"
 
 ## UC7 - UpdatePosition
 Ator: Sistema
 Input: ride_id, lat, long
 Output: void
 
--[ ] Deve verificar se a corrida está em status "in_progress", se não estiver lançar um erro
--[ ] Deve gerar o position_id
--[ ] Deve salvar na tabela position: position_id, ride_id, lat, long e date
+-[x] Deve verificar se a corrida está em status "in_progress", se não estiver lançar um erro
+-[x] Deve gerar o position_id
+-[x] Deve salvar na tabela position: position_id, ride_id, lat, long e date
 
 Considere o modelo de dados:
 create table ccca.position (
@@ -92,10 +92,10 @@ Ator: Motorista
 Input: ride_id
 Output: void
 
--[ ] Deve verificar se a corrida está em status "in_progress", se não estiver lançar um erro
--[ ] Deve obter todas as positions e calcular a distância entre cada uma delas, para isso utilize um algoritmo que receba duas coordenadas (lat, long) e retorne a distância entre elas em km.
--[ ] Com a distância total calculada, calcule o valor da corrida (fare) multiplicando a distância por 2,1
--[ ] Atualizar a corrida com o status "completed", a distância e o valor da corrida (fare)
+-[x] Deve verificar se a corrida está em status "in_progress", se não estiver lançar um erro
+-[x] Deve obter todas as positions e calcular a distância entre cada uma delas, para isso utilize um algoritmo que receba duas coordenadas (lat, long) e retorne a distância entre elas em km.
+-[x] Com a distância total calculada, calcule o valor da corrida (fare) multiplicando a distância por 2,1
+-[x] Atualizar a corrida com o status "completed", a distância e o valor da corrida (fare)
 
 ## UC9 - ProcessPayment
 Ator: Sistema
