@@ -1,6 +1,10 @@
+import type { DomainEvent } from "../../common/DomainEvent";
+import { PaymentProcessed } from "../events/PaymentProcessed";
 import { Id } from "../vos/Id";
 
 export class Payment {
+	private readonly events: DomainEvent[] = [];
+
 	constructor(
 		private readonly transactionId: Id,
 		private readonly rideId: Id,
@@ -17,6 +21,10 @@ export class Payment {
 
 	getStatus() {
 		return this.status;
+	}
+
+	emittedEvents() {
+		return this.events;
 	}
 
 	toDto() {
@@ -37,6 +45,7 @@ export class Payment {
 			new Date(),
 			"success",
 		);
+		payment.events.push(new PaymentProcessed({ payment }));
 		return payment;
 	}
 }
