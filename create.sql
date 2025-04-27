@@ -35,6 +35,14 @@ create table ccca.position (
   date timestamp
 );
 
+create table ccca.transaction (
+  transaction_id uuid primary key,
+  ride_id uuid,
+  amount numeric,
+  date timestamp,
+  status text
+);
+
 create table ccca.ride_projection (
 	ride_id uuid,
 	passenger_name text,
