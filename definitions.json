@@ -26,6 +26,15 @@
 			"auto_delete": false,
 			"internal": false,
 			"arguments": {}
+		},
+		{
+			"name": "PaymentProcessed",
+			"vhost": "/",
+			"type": "direct",
+			"durable": true,
+			"auto_delete": false,
+			"internal": false,
+			"arguments": {}
 		}
 	],
 	"queues": [
@@ -64,6 +73,15 @@
 			"arguments": {
 				"x-queue-type": "classic"
 			}
+		},
+		{
+			"name": "PaymentProcessed.updateProjection",
+			"vhost": "/",
+			"durable": true,
+			"auto_delete": false,
+			"arguments": {
+				"x-queue-type": "classic"
+			}
 		}
 	],
 	"bindings": [
@@ -95,6 +113,14 @@
 			"source": "RideFinished",
 			"vhost": "/",
 			"destination": "RideFinished.processPayment",
+			"destination_type": "queue",
+			"routing_key": "",
+			"arguments": {}
+		},
+		{
+			"source": "PaymentProcessed",
+			"vhost": "/",
+			"destination": "PaymentProcessed.updateProjection",
 			"destination_type": "queue",
 			"routing_key": "",
 			"arguments": {}
