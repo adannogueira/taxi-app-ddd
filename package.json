@@ -1,5 +1,10 @@
 {
 	"name": "ride-app-monorepo",
 	"private": "true",
-	"workspaces": ["backend/account", "backend/ride", "backend/payment"]
+	"workspaces": [
+		"backend/account",
+		"backend/ride",
+		"backend/payment",
+		"frontend"
+	]
 }
