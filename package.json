@@ -5,6 +5,7 @@
 		"backend/account",
 		"backend/ride",
 		"backend/payment",
-		"frontend"
+		"frontend",
+		"e2e"
 	]
 }
