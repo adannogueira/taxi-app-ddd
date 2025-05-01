@@ -19,7 +19,7 @@ export class Signup implements UseCase<Input, Output> {
 				carPlate: data.carPlate,
 				cpf: data.cpf,
 				email: data.email,
-				isDriver: data.isDriver,
+				isDriver: data.isDriver || !data.isPassenger,
 				isPassenger: data.isPassenger,
 				name: data.name,
 				password: data.password,
