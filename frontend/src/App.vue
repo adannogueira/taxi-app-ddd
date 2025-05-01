@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import axios from "axios";
 import { ref } from "vue";
 
 const form = ref({
@@ -9,7 +10,10 @@ const form = ref({
 	confirmPassword: "",
 	isPassenger: false,
 	step: 1,
+	error: "",
+	success: false,
 });
+
 function calculateProgress() {
 	let progress = 0;
 	if (form.value.isPassenger) progress += 25;
@@ -24,8 +28,66 @@ function calculateProgress() {
 	return progress;
 }
 
+function validate() {
+	if (form.value.step === 1 && !form.value.isPassenger) {
+		form.value.error = "Selecione o tipo de conta";
+		return false;
+	}
+	if (form.value.step === 2) {
+		if (!form.value.name) {
+			form.value.error = "Informe o nome";
+			return false;
+		}
+		if (!form.value.email) {
+			form.value.error = "Informe o email";
+			return false;
+		}
+		if (!form.value.cpf) {
+			form.value.error = "Informe o CPF";
+			return false;
+		}
+	}
+	if (form.value.step === 3) {
+		if (!form.value.password) {
+			form.value.error = "Informe a senha";
+			return false;
+		}
+		if (!form.value.confirmPassword) {
+			form.value.error = "Informe a confirmação de senha";
+			return false;
+		}
+		if (form.value.password !== form.value.confirmPassword) {
+			form.value.error = "A senha e a confirmação precisam ser iguais";
+			return false;
+		}
+	}
+	form.value.error = "";
+	return true;
+}
+
 function next() {
-	form.value.step++;
+	if (validate()) form.value.step++;
+}
+
+function previous() {
+	form.value.step--;
+}
+
+async function confirm() {
+	if (validate()) {
+		try {
+			const result = await axios.post("http://localhost:3000/signup", {
+				name: form.value.name,
+				email: form.value.email,
+				cpf: form.value.cpf,
+				password: form.value.password,
+				isPassenger: form.value.isPassenger,
+			});
+			form.value.success = result?.data?.accountId;
+		} catch (e) {
+			console.error(e);
+		}
+	}
 }
 </script>
 
@@ -38,13 +100,20 @@ function next() {
 			<span>Progresso </span>
 			<span class="span-progress">{{ calculateProgress() }}%</span>
 		</div>
+		<div>
+			<span>Erro </span>
+			<span class="span-error">{{ form.error }}</span>
+		</div>
+		<div>
+			<span>Sucesso </span>
+			<span v-if="form.success" class="span-success">{{ form.success }}</span>
+		</div>
 	</div>
-	<div>
+	<div v-if="form.step === 1">
 		<span>Passageiro </span>
 		<input type="checkbox" class="input-is-passenger" v-model="form.isPassenger"/>
 	</div>
-	<div><button class="button-next" @click="next()">Próximo</button></div>
-	<div>
+	<div v-if="form.step === 2">
 		<div>
 			<span>Nome </span>
 			<input type="text" class="input-name" v-model="form.name">
@@ -58,7 +127,7 @@ function next() {
 			<input type="text" class="input-cpf" v-model="form.cpf">
 		</div>
 	</div>
-	<div>
+	<div v-if="form.step === 3">
 		<div>
 			<span>Senha </span>
 			<input type="password" class="input-password" v-model="form.password">
@@ -67,6 +136,15 @@ function next() {
 			<span>Confirmação de senha </span>
 			<input type="password" class="input-confirm-password" v-model="form.confirmPassword">
 		</div>
+	</div>
+	<div v-if="form.step > 1">
+		<button class="button-previous" @click="previous()">Anterior</button>
+	</div>
+	<div v-if="form.step < 3">
+		<button class="button-next" @click="next()">Próximo</button>
+	</div>
+	<div v-if="form.step === 3">
+		<button class="button-confirm" @click="confirm()">Confirmar</button>
 	</div>
 </template>
 
