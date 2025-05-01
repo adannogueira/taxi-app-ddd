@@ -1,97 +1,17 @@
 <script setup lang="ts">
 import { inject, ref } from "vue";
-import { ACCOUNT_GATEWAY, type AccountGateway } from "./gateway/AccountGateway";
+import {
+	ACCOUNT_GATEWAY,
+	type AccountGateway,
+} from "./infra/gateway/AccountGateway";
+import { FormSignup } from "./domain/FormSignup";
 
 const accountGateway = inject(ACCOUNT_GATEWAY) as AccountGateway;
-
-const form = ref({
-	name: "",
-	email: "",
-	cpf: "",
-	password: "",
-	confirmPassword: "",
-	isPassenger: false,
-	step: 1,
-	error: "",
-	success: "",
+const form = ref(new FormSignup());
+form.value.register("confirmed", async (data: any) => {
+	const result = await accountGateway.signup(data);
+	form.value.success = result.accountId;
 });
-
-function calculateProgress() {
-	let progress = 0;
-	if (form.value.isPassenger) progress += 25;
-	if (form.value.name) progress += 20;
-	if (form.value.email) progress += 20;
-	if (form.value.cpf) progress += 20;
-	if (
-		form.value.password &&
-		form.value?.password === form.value?.confirmPassword
-	)
-		progress += 15;
-	return progress;
-}
-
-function validate() {
-	if (form.value.step === 1 && !form.value.isPassenger) {
-		form.value.error = "Selecione o tipo de conta";
-		return false;
-	}
-	if (form.value.step === 2) {
-		if (!form.value.name) {
-			form.value.error = "Informe o nome";
-			return false;
-		}
-		if (!form.value.email) {
-			form.value.error = "Informe o email";
-			return false;
-		}
-		if (!form.value.cpf) {
-			form.value.error = "Informe o CPF";
-			return false;
-		}
-	}
-	if (form.value.step === 3) {
-		if (!form.value.password) {
-			form.value.error = "Informe a senha";
-			return false;
-		}
-		if (!form.value.confirmPassword) {
-			form.value.error = "Informe a confirmação de senha";
-			return false;
-		}
-		if (form.value.password !== form.value.confirmPassword) {
-			form.value.error = "A senha e a confirmação precisam ser iguais";
-			return false;
-		}
-	}
-	form.value.error = "";
-	return true;
-}
-
-function next() {
-	if (validate()) form.value.step++;
-}
-
-function previous() {
-	form.value.step--;
-}
-
-async function confirm() {
-	if (validate()) {
-		try {
-			const { cpf, email, isPassenger, name, password } = form.value;
-			const result = await accountGateway.signup({
-				cpf,
-				email,
-				isPassenger,
-				name,
-				password,
-			});
-			form.value.success = result.accountId;
-		} catch (e) {
-			console.error(e);
-		}
-	}
-}
 </script>
 
 <template>
@@ -101,7 +21,7 @@ async function confirm() {
 		</div>
 		<div>
 			<span>Progresso </span>
-			<span class="span-progress">{{ calculateProgress() }}%</span>
+			<span class="span-progress">{{ form.calculateProgress() }}%</span>
 		</div>
 		<div>
 			<span>Erro </span>
@@ -141,13 +61,13 @@ async function confirm() {
 		</div>
 	</div>
 	<div v-if="form.step > 1">
-		<button class="button-previous" @click="previous()">Anterior</button>
+		<button class="button-previous" @click="form.previous()">Anterior</button>
 	</div>
 	<div v-if="form.step < 3">
-		<button class="button-next" @click="next()">Próximo</button>
+		<button class="button-next" @click="form.next()">Próximo</button>
 	</div>
 	<div v-if="form.step === 3">
-		<button class="button-confirm" @click="confirm()">Confirmar</button>
+		<button class="button-confirm" @click="form.confirm()">Confirmar</button>
 	</div>
 </template>
 

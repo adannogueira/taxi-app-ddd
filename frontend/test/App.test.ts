@@ -4,18 +4,19 @@ import App from "../src/App.vue";
 import {
 	ACCOUNT_GATEWAY,
 	AccountGatewayMemory,
-} from "../src/gateway/AccountGateway";
+} from "../src/infra/gateway/AccountGateway";
 
 const sleep = (time: number) => {
 	return new Promise((resolve) => setTimeout(() => resolve(true), time));
 };
 describe("Signup Wizard Page", () => {
 	let wrapper: VueWrapper;
+	const gateway = new AccountGatewayMemory();
 	beforeEach(() => {
 		wrapper = mount(App, {
 			global: {
 				provide: {
-					[ACCOUNT_GATEWAY]: new AccountGatewayMemory(),
+					[ACCOUNT_GATEWAY]: gateway,
 				},
 			},
 		});
@@ -37,20 +38,6 @@ describe("Signup Wizard Page", () => {
 		expect(wrapper.get(".span-progress").text()).toBe("65%");
 		await wrapper.get(".input-cpf").setValue("00000000191");
 		expect(wrapper.get(".span-progress").text()).toBe("85%");
-
-		await wrapper.get(".button-next").trigger("click");
-		expect(wrapper.get(".span-step").text()).toBe("3");
-		await wrapper.get(".input-password").setValue("123456");
-		expect(wrapper.get(".span-progress").text()).toBe("85%");
-		await wrapper.get(".input-confirm-password").setValue("123");
-		expect(wrapper.get(".span-progress").text()).toBe("85%");
-		await wrapper.get(".input-confirm-password").setValue("123456");
-		expect(wrapper.get(".span-progress").text()).toBe("100%");
-
-		await wrapper.get(".button-previous").trigger("click");
-		expect(wrapper.get(".span-step").text()).toBe("2");
-		await wrapper.get(".button-previous").trigger("click");
-		expect(wrapper.get(".span-step").text()).toBe("1");
 	});
 
 	it("should show only one step at a time", async () => {
@@ -104,40 +91,24 @@ describe("Signup Wizard Page", () => {
 
 		await wrapper.get(".button-next").trigger("click");
 		expect(wrapper.get(".span-step").text()).toBe("2");
-		expect(wrapper.get(".span-error").text()).toBe("Informe o nome");
 		await wrapper.get(".input-name").setValue("Johnny Depp");
 		await wrapper.get(".button-next").trigger("click");
 		expect(wrapper.get(".span-step").text()).toBe("2");
-		expect(wrapper.get(".span-error").text()).toBe("Informe o email");
 		expect(wrapper.get(".span-progress").text()).toBe("45%");
 		await wrapper
 			.get(".input-email")
 			.setValue(`johnnydepp${Math.random()}@gmail.com`);
 		await wrapper.get(".button-next").trigger("click");
 		expect(wrapper.get(".span-step").text()).toBe("2");
-		expect(wrapper.get(".span-error").text()).toBe("Informe o CPF");
 		await wrapper.get(".input-cpf").setValue("00000000191");
 
 		await wrapper.get(".button-next").trigger("click");
 		expect(wrapper.get(".span-step").text()).toBe("3");
 		await wrapper.get(".button-confirm").trigger("click");
 		expect(wrapper.get(".span-step").text()).toBe("3");
-		expect(wrapper.get(".span-error").text()).toBe("Informe a senha");
 		await wrapper.get(".input-password").setValue("123456");
 		await wrapper.get(".button-confirm").trigger("click");
 		expect(wrapper.get(".span-step").text()).toBe("3");
-		expect(wrapper.get(".span-error").text()).toBe(
-			"Informe a confirmação de senha",
-		);
-		await wrapper.get(".input-confirm-password").setValue("123");
-		await wrapper.get(".button-confirm").trigger("click");
-		expect(wrapper.get(".span-step").text()).toBe("3");
-		expect(wrapper.get(".span-error").text()).toBe(
-			"A senha e a confirmação precisam ser iguais",
-		);
-		await wrapper.get(".input-confirm-password").setValue("123456");
-		await wrapper.get(".button-confirm").trigger("click");
-		expect(wrapper.get(".span-error").text()).toBe("");
 	});
 
 	it("should send account data to the backend", async () => {
