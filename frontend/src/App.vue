@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import axios from "axios";
-import { ref } from "vue";
+import { inject, ref } from "vue";
+import { ACCOUNT_GATEWAY, type AccountGateway } from "./gateway/AccountGateway";
+
+const accountGateway = inject(ACCOUNT_GATEWAY) as AccountGateway;
 
 const form = ref({
 	name: "",
@@ -11,7 +13,7 @@ const form = ref({
 	isPassenger: false,
 	step: 1,
 	error: "",
-	success: false,
+	success: "",
 });
 
 function calculateProgress() {
@@ -76,14 +78,15 @@ function previous() {
 async function confirm() {
 	if (validate()) {
 		try {
-			const result = await axios.post("http://localhost:3000/signup", {
-				name: form.value.name,
-				email: form.value.email,
-				cpf: form.value.cpf,
-				password: form.value.password,
-				isPassenger: form.value.isPassenger,
+			const { cpf, email, isPassenger, name, password } = form.value;
+			const result = await accountGateway.signup({
+				cpf,
+				email,
+				isPassenger,
+				name,
+				password,
 			});
-			form.value.success = result?.data?.accountId;
+			form.value.success = result.accountId;
 		} catch (e) {
 			console.error(e);
 		}

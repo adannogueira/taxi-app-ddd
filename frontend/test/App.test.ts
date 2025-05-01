@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mount, type VueWrapper } from "@vue/test-utils";
 import App from "../src/App.vue";
+import {
+	ACCOUNT_GATEWAY,
+	AccountGatewayMemory,
+} from "../src/gateway/AccountGateway";
 
 const sleep = (time: number) => {
 	return new Promise((resolve) => setTimeout(() => resolve(true), time));
@@ -8,7 +12,13 @@ const sleep = (time: number) => {
 describe("Signup Wizard Page", () => {
 	let wrapper: VueWrapper;
 	beforeEach(() => {
-		wrapper = mount(App, {});
+		wrapper = mount(App, {
+			global: {
+				provide: {
+					[ACCOUNT_GATEWAY]: new AccountGatewayMemory(),
+				},
+			},
+		});
 	});
 
 	it("should exhibit the progress percentage", async () => {
